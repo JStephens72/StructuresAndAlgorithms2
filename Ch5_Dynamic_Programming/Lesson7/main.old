@@ -1,0 +1,30 @@
+def fibonacci(n):
+
+    tabulation = [None] * (n+1)
+    tabulation[0] = 0
+    if n > 0:
+        tabulation[1] = 1
+    for i in range(2, n+1):
+        tabulation[i] = tabulation[i-2] + tabulation[i-1]
+    return tabulation[n]
+
+def tabulate(max_n):
+    def decorator(func):
+        # Build the table bottom-up
+        table = [None] * (max_n + 1)
+        for n in range(max_n + 1):
+            table[n] = func(n, table)
+
+        # Return a wrapper that just looks up values
+        def wrapper(n):
+            return table[n]
+
+        return wrapper
+    return decorator
+
+
+@tabulate(1000)
+def fibonacci(n, table):
+    if n < 2:
+        return n
+    return table[n-1] + table[n-2]
